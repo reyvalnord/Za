@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Journey of My Love</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- 1. SETUP DASAR --- */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+body{
+  background-color:#0b0f19;
+  color:#fff;
+  font-family:'Poppins', sans-serif;
+  overflow-x:hidden;
+  font-size:14px;
+}
+    
+    body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  background: url("za/wal1.jpg") center/cover no-repeat fixed;
+  filter: blur(8px);
+  transform: scale(1.05); /* biar tepi blur nggak kelihatan */
+  z-index: -2;
+}
+    .fixed-bg, .particles { display: none !important; }
+
+        /* --- 2. BACKGROUND ANIMATION --- */
+
+        @keyframes twinkle { from {background-position: 0 0;} to {background-position: 100px 100px;} }
+
+        /* --- 3. HEADER SECTION --- */
+        header {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* ✅ Judul diperkecil */
+        header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 3.0rem);
+            color: #ffffff;
+            margin-bottom: 18px;
+            text-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        /* ✅ Subtitle diperkecil */
+        .subtitle {
+            max-width: 820px;
+            font-size: clamp(0.95rem, 2.1vw, 1.15rem);
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.85;
+            margin: 0 auto;
+        }
+
+        /* ✅ Scroll text diperkecil */
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            animation: bounce 2s infinite;
+            opacity: 0.65;
+            font-size: 0.8rem;
+            letter-spacing: 0.4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+
+        /* --- 4. TIMELINE CONTAINER --- */
+        .timeline-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px 100px 20px;
+        }
+
+        /* Garis Vertikal Utama */
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            top: 0;
+            bottom: 0;
+            left: 30px; /* Posisi garis dari kiri */
+            border-radius: 2px;
+        }
+
+        /* --- 5. TIMELINE ITEM --- */
+        .timeline-item {
+            position: relative;
+            margin-bottom: 60px;
+            padding-left: 50px; /* Memberi ruang agar tidak menabrak garis */
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Titik/Dot pada Garis */
+        .timeline-dot {
+            position: absolute;
+            left: 19px; /* Menyesuaikan dengan garis */
+            top: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #0b0f19;
+            border: 4px solid #4a5568;
+            z-index: 2;
+            transition: all 0.5s;
+        }
+
+        .timeline-item.visible .timeline-dot {
+            border-color: #ffd700;
+            background: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Kartu Konten */
+        .content-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Segitiga kecil penunjuk ke dot */
+        .content-card::before {
+            content: " ";
+            position: absolute;
+            top: 10px;
+            left: -10px;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid rgba(255, 255, 255, 0.1);
+        }
+
+.date-label{
+  display:inline-flex;
+  align-items:center;
+  background: rgba(255, 215, 0, 0.2);
+  color:#ffd700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight:bold;
+
+  margin: 0 8px 10px 0;  /* ✅ kanan + bawah */
+}
+
+.timeline-title{
+  display:inline-block;
+  vertical-align: middle;
+  font-size: 1.05rem;
+  font-weight: 600;
+
+  margin: 0 0 1px 0;    /* ✅ bawah saja (pas) */
+}
+
+.timeline-text{
+  font-size: 0.82rem;
+  color:#d1d5db;
+  line-height: 1.65;
+  margin-bottom: 15px;
+}
+
+/* layar kecil biar turun dan tetap rapi */
+@media (max-width: 420px){
+  .date-label{
+    margin: 0 0 8px 0;
+  }
+  .timeline-title{
+    display:block;
+    margin: 0 0 10px 0;
+  }
+}
+
+
+        /* Gambar */
+        .memory-img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* --- 6. SPECIAL STYLE UNTUK JADIAN (18 DES) --- */
+        .special-date .timeline-dot {
+            width: 30px;
+            height: 30px;
+            left: 17px;
+            animation: pulse 2s infinite;
+        }
+
+        .special-date .content-card {
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            background: linear-gradient(145deg, rgba(255,215,0,0.1) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        /* --- 7. MUSIC PLAYER & LINK --- */
+        .music-player-card {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.4);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        
+        .album-art {
+            width: 46px;
+            height: 46px;
+            border-radius: 50px;
+            background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=200'); /* Ganti dengan cover Sempurna */
+            background-size: cover;
+            margin-right: 15px;
+            animation: spin 10s linear infinite;
+            animation-play-state: paused;
+        }
+        
+        .playing .album-art { animation-play-state: running; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* ✅ Info lagu diperkecil */
+        .song-info h4 { font-size: 0.85rem; margin: 0; }
+        .song-info p { font-size: 0.7rem; color: #aaa; margin: 0; }
+
+        /* Floating Button Music */
+        .fab-music {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 55px;
+            height: 55px;
+            background: #ffd700;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            z-index: 100;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* --- ANIMASI BOUNCE --- */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+.btn-visit{
+  display:flex;              /* biar lebar dan jelas */
+  width:100%;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+
+  padding: 12px 16px;
+  border-radius: 14px;
+
+  background: #ffd700;       /* solid */
+  color: #0b0f19;            /* kontras */
+  text-decoration:none;
+
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.2px;
+
+  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
+  border: 1px solid rgba(255, 215, 0, 0.85);
+
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+
+.btn-visit{
+  background: #C9A227;                 /* gold */
+  border: 1px solid #B08D21;           /* gold lebih gelap */
+  color: #0b0f19;
+  box-shadow: 0 10px 25px rgba(201, 162, 39, 0.28);
+}
+
+.btn-visit:hover{
+  box-shadow: 0 14px 32px rgba(201, 162, 39, 0.36);
+}
+    .fake-chat .chat-card{
+  border-radius: 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 14px;
+}
+
+.fake-chat .chat-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 12px;
+}
+
+.fake-chat .chat-pp{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.25);
+}
+
+.fake-chat .chat-name{
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.fake-chat .chat-status{
+  font-size: 0.72rem;
+  opacity: 0.7;
+}
+
+.fake-chat .chat-bubbles{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.fake-chat .bubble{
+  max-width: 82%;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.22);
+}
+
+.fake-chat .bubble.left{
+  align-self:flex-start;
+  border-top-left-radius: 8px;
+}
+
+.fake-chat .bubble.right{
+  align-self:flex-end;
+  border-top-right-radius: 8px;
+  background: rgba(201, 162, 39, 0.16); /* gold lembut */
+  border-color: rgba(201, 162, 39, 0.26);
+}
+
+.fake-chat .chat-actions{
+  display:flex;
+  gap:10px;
+  margin-top: 14px;
+}
+  .video-wrap{
+  margin-top: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.22);
+}
+
+.video-player{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+  /* === OUR JOURNEY: HERO CARD (premium, nyambung tema gold) === */
+.our-journey .content-card{
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 26px 22px;
+
+  /* glass + depth */
+  background: rgba(15, 18, 28, 0.58);
+  backdrop-filter: blur(14px);
+
+  /* border gradient halus (lebih mahal dari border biasa) */
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow:
+    0 22px 75px rgba(0,0,0,0.62),
+    inset 0 0 0 1px rgba(255,215,0,0.10);
+}
+
+/* sheen / kilau diagonal biar “special” */
+.our-journey .content-card::after{
+  content:"";
+  position:absolute;
+  inset:-120px;
+  background:
+    linear-gradient(135deg,
+      transparent 0%,
+      rgba(255,215,0,0.10) 25%,
+      rgba(255,255,255,0.05) 40%,
+      transparent 60%);
+  transform: rotate(-6deg);
+  pointer-events:none;
+}
+
+/* glow spotlight di belakang teks (lebih cinematic) */
+.our-journey .content-card::before{
+  content:"";
+  position:absolute;
+  inset:-80px;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255,215,0,0.18), transparent 58%),
+    radial-gradient(circle at 20% 85%, rgba(255,215,0,0.10), transparent 62%);
+  pointer-events:none;
+}
+
+/* Dot dibuat “utama” */
+.our-journey .timeline-dot{
+  width: 32px;
+  height: 32px;
+  left: 16px;
+  border-width: 4px;
+}
+.our-journey.visible .timeline-dot{
+  border-color:#ffd700;
+  background:#ffd700;
+  box-shadow: 0 0 22px rgba(255,215,0,0.55);
+}
+
+/* Label OUR JOURNEY jadi “ribbon” kecil */
+.our-journey .date-label{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  background: rgba(255,215,0,0.18);
+  color:#ffd700;
+  border: 1px solid rgba(255,215,0,0.22);
+  font-weight: 900;
+  letter-spacing: .4px;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin: 0 0 14px 0;
+}
+
+/* Tambah icon tanpa ubah HTML */
+.our-journey .date-label::before{
+  content:"✦";
+  font-size: .8rem;
+  opacity: .95;
+}
+
+/* Judul lebih “hero” */
+.our-journey .timeline-title{
+  display:block;
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-shadow: 0 12px 40px rgba(0,0,0,0.55);
+}
+
+/* Divider gold tipis */
+.our-journey .timeline-title::after{
+  content:"";
+  display:block;
+  width: 110px;
+  height: 3px;
+  border-radius: 999px;
+  margin-top: 12px;
+  background: rgba(255,215,0,0.32);
+}
+
+/* Text pembuka lebih readable */
+.our-journey .timeline-text{
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.95;
+  color: rgba(255,255,255,0.80);
+}
+
+/* Biar card terasa spesial saat hover (optional) */
+.our-journey .content-card:hover{
+  transform: translateY(-2px);
+  transition: transform .18s ease, box-shadow .18s ease;
+  box-shadow:
+    0 26px 85px rgba(0,0,0,0.66),
+    inset 0 0 0 1px rgba(255,215,0,0.14);
+}
+    </style>
+</head>
+<body>
+
+    <div class="fixed-bg"></div>
+    <div class="particles"></div>
+
+    <audio id="bgMusic" loop>
+        <source src="za/sempurna.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="fab-music" onclick="toggleMusic()">
+        <i class="fas fa-play" id="musicIcon"></i>
+    </button>
+
+    <header>
+        <div style="margin-bottom: 10px;">
+            <i class="fas fa-infinity" style="font-size: 2rem; color: #ffd700;"></i>
+        </div>
+        <h1>Journey With Dino</h1>
+        <p class="subtitle">Kisah kita, tertulis dalam waktu.</p>
+        <div class="scroll-down">
+            Scroll untuk memulai
+            <i class="fas fa-caret-down" aria-hidden="true"></i>
+        </div>
+    </header>
+
+<div class="timeline-container">
+<div class="timeline-item our-journey">
+  <div class="timeline-dot"></div>
+  <div class="content-card">
+    <span class="date-label">OUR JOURNEY</span>
+    <h3 class="timeline-title">Adipati &amp; Alexza</h3>
+
+    <p class="timeline-text">
+      Selamat datang di Journey With Dino.<br>
+      Scroll pelan-pelan, setiap bagian punya cerita.<br>
+      Ini bukan sekedar website tapi perjalanan Adipati Pamungkas untuk mendapatkan Alexza Pandemos.
+    </p>
+  </div>
+</div>
+              <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">OUR ANTHEM</span>
+                <h3 class="timeline-title">Sempurna</h3>
+                <p class="timeline-text">Setiap lirik lagu ini adalah tentangmu.</p>
+                
+                <div class="music-player-card">
+                    <div class="album-art" id="albumArt"></div>
+                    <div class="song-info">
+                        <h4>Sempurna</h4>
+                        <p>Andra & The Backbone</p>
+                    </div>
+                </div>
+                <p class="timeline-text" style="margin-top:10px; font-size: 0.75rem;">
+                    <i>"Kau begitu sempurna, dimataku kau begitu indah..."</i>
+                </p>
+                
+                <a href="https://open.spotify.com/track/your-link-here" target="_blank" style="text-decoration: none; display: inline-block; margin-top: 10px; color: #ffd700; font-size: 0.75rem;">
+                    <i class="fab fa-spotify"></i> Buka di Spotify
+                </a>
+            </div>
+        </div>
+
+<div class="timeline-item fake-chat">
+  <div class="timeline-dot"></div>
+  <div class="content-card">
+  <span class="date-label">OKTOBER 2025</span>
+  <h3 class="timeline-title">Day One</h3>      
+    <div class="chat-card">
+      <div class="chat-top">
+        <img src="za/pp.jpg" alt="Rp al" class="chat-pp">
+        <div class="chat-meta">
+          <div class="chat-name">Dinooo</div>
+          <div class="chat-status">online • mengetik...</div>
+        </div>
+      </div>
+
+      <div class="chat-bubbles">
+        <div class="bubble right">Simpan Adipati Pamungkas</div>
+
+        <div class="bubble left">Simpan Kembali Alexza Pandemos</div>
+        <div class="bubble right">Let's be friends</div>
+        <div class="bubble left">Ayo</div>
+       <div class="bubble right">Ayo Perkenalan Ulang</div>
+         <div class="bubble left">Bukannya sudah kenal dari lama?</div>
+      <div class="bubble right">Perkenalan ulang saja, Saya Dipta</div>
+
+     </div>
+
+    </div>
+  </div>
+</div>
+              <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label" style="background: #ffd700; color: #000;">24 OKTOBER 2025</span>
+                <h3 class="timeline-title">MOMENT</h3>
+                <img src="za/1.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                  Ini obrolan canggung kita setelah saya ditolak untuk pertama kalinya, panjang ceritanya yang pasti di moment itu saya sudqh kecintaan, wkwk.
+                </p>
+            </div>
+        </div>
+      
+                    <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">26 OKTOBER 2025</span>
+                <h3 class="timeline-title">First Attention </h3>
+                <img src="za/2.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                  Ada kejadian panjang yang bikin dia jadi tiba tiba perhatian, moment yang ga bakal dilupain, karena dia sangat lembut.
+                </p>
+            </div>
+        </div>
+      
+                  <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">NOVEMBER 2025</span>
+                <h3 class="timeline-title">Kisah Singkat</h3>
+                <p class="timeline-text">
+Semakin hari, obrolan kita semakin santai. Kita berbagi cerita, permainan, kisah hidup, dan hal apa pun yang menyenangkan. Dan bertubi tubi penolakan saya terima tapi Rasa nyaman dan suka malah semakin tumbuh, membuat saya yakin kamulah orangnya.<br><br>Kamu sering meragukan alasan mengapa saya tiba-tiba menyukaimu padahal perasaan itu tidak datang secara tiba-tiba, tapi karena kebersamaan yang pelan-pelan menjadi penting, karena caramu hadir, dan karena bersamamu saya merasa nyaman tanpa harus banyak berkata. 
+                </p>
+                <div style="font-style: italic; color: #ffd700; font-size: 0.8rem; border-left: 2px solid #ffd700; padding-left: 10px;">
+                    "Tanpa disadari, kamu menjadi tempat pulang dari semua obrolan dan cerita.”
+                </div>
+            </div>
+        </div>
+      
+            <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">1 NOVEMBER 2025</span>
+                <h3 class="timeline-title">Special Message</h3>
+                <img src="za/4.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                  Moment diluar prediksi karena dia yang pertama kali chat saya setelah penolakan lagi dan lagi.
+                </p>
+            </div>
+        </div>
+
+            <div class="timeline-item website-post">
+  <div class="timeline-dot"></div>
+  <div class="content-card">
+    <span class="date-label">1 November 2025</span>
+    <h3 class="timeline-title">Special Letter</h3>
+
+    <a href="https://foralexza5mood.netlify.app/" target="_blank" class="website-link">
+      <img src="za/web2.png" class="memory-img" alt="Preview Fordino">
+    </a>
+
+    <a href="https://foralexza5mood.netlify.app/" target="_blank" class="btn-visit">
+      Buka Surat <i class="fas fa-arrow-up-right-from-square" style="margin-left:6px;"></i>
+    </a>
+  </div>
+</div>
+      
+      
+                  <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">1 NOVEMBER 2025</span>
+                <h3 class="timeline-title">Label Lucu</h3>
+                <img src="za/5.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                  Saya menyadari bahwa dia memiliki mood yang beragam, wkwk, sering nakal, kadang gemesh, tapi tiba tiba galak, kadang baik tapi tau tau overthingking yang lebih parah tiba tiba diam, overthingking padahal saya tidak melakukan apapun, tapi saya begitu menyukai semua tentang dia.</p>
+            </div>
+        </div>
+      
+                  <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">1 NOVEMBER 2025</span>
+                <h3 class="timeline-title">Lagi... Wkwk</h3>
+                <img src="za/6.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                  Dan ini untuk yang ke sekian kali nth sudah beberapa puluh kali, saya mendapatkan penolakan, wkwk, perjuangan saya sudah sejauh ini ternyata? sampai bisa mendapatkanmu wanita dingin dengan jutaan cara untuk menolak siapapun yang mendekat, I LOVE U ALEXZA PANDEMOS...
+                </p>
+            </div>
+        </div>
+      
+                  <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">9 NOVEMBER 2025</span>
+                <h3 class="timeline-title">Little Jealous..</h3>
+                <img src="za/7.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                  Ini pas dia cemburu, gemesh. Ceritanya karena suruh ngisi vote team tersayang tapi tidak diperbolehkan vote nama dia...
+                </p>
+            </div>
+        </div>
+      
+                  <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">17 NOVEMBER 2025</span>
+                <h3 class="timeline-title">Special Call </h3>
+                <img src="za/10.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                 Panggilan paling ditunggu. 
+                </p>
+            </div>
+        </div>
+      
+                  <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">19 NOVEMBER 2025</span>
+                <h3 class="timeline-title">First kiss</h3>
+                <img src="za/11.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                So Cute.
+                </p>
+            </div>
+        </div>
+      
+                  <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">24 NOVEMBER 2025</span>
+                <h3 class="timeline-title">Little Moment</h3>
+                <img src="za/12.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+                 Ini ceritanya ngambek karena ketiduran, gemash.
+                </p>
+            </div>
+        </div>
+      
+                  <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">DESEMBER 2025</span>
+                <h3 class="timeline-title">Kisah Manis</h3>
+                <p class="timeline-text">
+Banyak Moment manis terjadi di bulan ini dari hal paling menggemaskan sampai hal yang paling dinanti.<br>I Love U Alexza Pandemos...
+                </p>
+                <div style="font-style: italic; color: #ffd700; font-size: 0.8rem; border-left: 2px solid #ffd700; padding-left: 10px;">
+                    - adipati pamungkas
+                </div>
+            </div>
+        </div>
+      
+      <div class="timeline-item video-post">
+  <div class="timeline-dot"></div>
+  <div class="content-card">
+    <span class="date-label">3 DESEMBER 2025</span>
+    <h3 class="timeline-title">Vidbar Pertama</h3>
+
+    <div class="video-wrap">
+      <!-- ganti path videonya sesuai file kamu -->
+<video
+  class="video-player"
+  controls
+  playsinline
+  preload="metadata"
+  poster="za/w.jpg">
+  <source src="za/vid1.mp4" type="video/mp4">
+</video>
+    </div>
+  </div>
+</div>
+      
+<div class="timeline-item website-post">
+  <div class="timeline-dot"></div>
+  <div class="content-card">
+    <span class="date-label">18 JANUARI 2026</span>
+    <h3 class="timeline-title">Trex Message</h3>
+
+    <a href="https://fordinoooo.netlify.app" target="_blank" class="website-link">
+      <img src="za/web.png" class="memory-img" alt="Preview Fordino">
+    </a>
+
+    <a href="https://fordinoooo.netlify.app" target="_blank" class="btn-visit">
+      Buka Chat <i class="fas fa-arrow-up-right-from-square" style="margin-left:6px;"></i>
+    </a>
+  </div>
+</div>
+
+      
+                  <div class="timeline-item special-date">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">9 JANUARI 2026</span>
+                <h3 class="timeline-title">Special Moment </h3>
+                <img src="za/fotbar.jpg" class="memory-img" alt="Jadian">
+                <p class="timeline-text">
+               Diantara sore dan senyuman indahmu.
+                </p>
+            </div>
+        </div>
+      
+<div class="timeline-item website-post">
+  <div class="timeline-dot"></div>
+  <div class="content-card">
+                <span class="date-label" style="background: #ffd700; color: #000;">OFFICIAL DATE</span>
+    <h3 class="timeline-title">18 Januari 2026</h3>
+
+    <a href="https://fordinoooo.netlify.app" target="_blank" class="website-link">
+      <img src="za/surat.png" class="memory-img" alt="Preview Fordino">
+    </a>
+
+    <a href="web/surat.html" target="_blank" class="btn-visit">
+      Buka Surat <i class="fas fa-arrow-up-right-from-square" style="margin-left:6px;"></i>
+    </a>
+  </div>
+</div>
+      
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="content-card">
+                <span class="date-label">HARI INI & SELAMANYA</span>
+                <h3 class="timeline-title">The Journey Continues...</h3>
+                <img src="za/1.jpeg" class="memory-img" alt="Jadian">              
+                <p class="timeline-text">
+                    Ini bukan akhir dari timeline, tapi awal dari lembaran kosong yang akan kita tulis bersama. Terima kasih sudah memilih Mas, Alexza.
+                </p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <i class="fas fa-heart" style="color: #e53e3e; font-size: 1.7rem; animation: pulse 1s infinite;"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer style="text-align: center; padding: 50px 20px; color: #fff; font-size: 0.75rem;">
+        <p>Made with love for Alexza Pandemos</p>
+        <p>© 2026 Adipati Pamungkas</p>
+    </footer>
+
+    <script>
+        // --- 1. LOGIK SCROLL ANIMATION (MUNCUL PERLAHAN) ---
+        const observerOptions = {
+            threshold: 0.2 // Elemen muncul saat 20% terlihat di layar
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // --- 2. LOGIKA MUSIK ---
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicIcon');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.classList.remove('fa-pause');
+                musicBtn.classList.add('fa-play');
+                document.querySelector('.music-player-card').classList.remove('playing');
+            } else {
+                music.play();
+                musicBtn.classList.remove('fa-play');
+                musicBtn.classList.add('fa-pause');
+                document.querySelector('.music-player-card').classList.add('playing');
+            }
+            isPlaying = !isPlaying;
+        }
+    </script>
+</body>
+</html>
