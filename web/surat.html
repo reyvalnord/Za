@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Perjanjian Hati</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cedarville+Cursive&family=Sacramento&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            /* Background tekstur kertas kusut */
+            background-color: #e6e1d8;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Playfair Display', serif;
+            padding: 20px;
+            color: #a83232; /* Warna Merah Marun sesuai referensi */
+        }
+
+        /* --- WADAH UTAMA (EFEK PRANGKO) --- */
+        .stamp-container {
+            position: relative;
+            width: 100%;
+            max-width: 550px;
+            background-color: #fcfbf9; /* Warna kertas surat */
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            
+            /* CSS MAGIC untuk membuat pinggiran bergerigi (Scalloped Edge) */
+            --r: 10px; /* Radius gerigi */
+            mask: 
+                radial-gradient(var(--r), #0000 98%, #000) round calc(-1.5*var(--r)) calc(-1.5*var(--r)) / calc(3*var(--r)) calc(3*var(--r)),
+                linear-gradient(#000 0 0)  no-repeat 50% / calc(100% - 2*var(--r)) calc(100% - 2*var(--r));
+            -webkit-mask: 
+                radial-gradient(var(--r), #0000 98%, #000) round calc(-1.5*var(--r)) calc(-1.5*var(--r)) / calc(3*var(--r)) calc(3*var(--r)),
+                linear-gradient(#000 0 0)  no-repeat 50% / calc(100% - 2*var(--r)) calc(100% - 2*var(--r));
+            
+            /* Border tipis di dalam gerigi */
+            border: 0px solid transparent; 
+        }
+
+        /* --- HEADER --- */
+        .header-title {
+            text-align: center;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #a83232; /* Garis bawah tipis */
+            display: inline-block;
+            width: 100%;
+            padding-bottom: 10px;
+        }
+
+        /* --- KOLOM ATAS (TO/FROM & STAMPS) --- */
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .meta-info {
+            flex: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding-top: 10px;
+        }
+
+        .meta-row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-right: 10px;
+            width: 50px;
+        }
+
+        .handwritten-name {
+            font-family: 'Cedarville Cursive', cursive;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #a83232;
+            padding: 0 10px;
+            flex-grow: 1;
+            color: #b93b3b;
+        }
+
+        /* --- DEKORASI PRANGKO KECIL (CSS ONLY) --- */
+        .stamps-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mini-stamp {
+            width: 70px;
+            height: 85px;
+            border: 2px dashed #d66;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fff5f5;
+            position: relative;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .mini-stamp span {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .stamp-text {
+            font-size: 0.5rem;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #d66;
+            letter-spacing: 1px;
+        }
+
+        /* --- ISI SURAT --- */
+        .letter-body {
+            font-family: 'Cedarville Cursive', cursive;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: justify; /* Supaya rapi */
+            margin-bottom: 40px;
+            color: #8a2a2a;
+        }
+
+        .highlight-date {
+            font-weight: bold;
+            border-bottom: 1px dashed #a83232;
+        }
+
+        /* --- TANDA TANGAN --- */
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+
+        .sign-box {
+            text-align: center;
+            width: 40%;
+        }
+
+        .sign-area {
+            font-family: 'Sacramento', cursive; /* Font beda untuk tanda tangan */
+            font-size: 2.1rem;
+            height: 60px;
+            margin-top: 10px;
+            color: #5e1b1b;
+            transform: rotate(-5deg); /* Sedikit miring agar natural */
+        }
+
+        .sign-label {
+            border-top: 1px solid #a83232;
+            padding-top: 5px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- STEMPEL CAP (POSTMARK) --- */
+        .postmark {
+            position: absolute;
+            bottom: 60px;
+            right: 40px;
+            width: 100px;
+            height: 100px;
+            border: 2px solid #d66;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+            transform: rotate(-15deg);
+            pointer-events: none;
+        }
+        
+        .postmark-inner {
+            width: 90%;
+            height: 90%;
+            border: 1px dashed #d66;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            text-align: center;
+            color: #d66;
+        }
+
+        .wavy-lines {
+            position: absolute;
+            right: -60px;
+            top: 30px;
+            font-size: 1.8rem;
+            letter-spacing: -5px;
+            color: #d66;
+            width: 60px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        /* Responsive HP */
+        @media (max-width: 480px) {
+            .header-title { font-size: 1.4rem; }
+            .top-section { flex-direction: column; }
+            .stamps-group { margin-top: 20px; justify-content: flex-end; }
+            .letter-body { font-size: 1rem; }
+            .signature-section { flex-direction: column; gap: 30px; align-items: center; }
+            .sign-box { width: 80%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="stamp-container">
+        
+        <h1 class="header-title">Official Agreement</h1>
+
+        <div class="top-section">
+            <div class="meta-info">
+                <div class="meta-row">
+                    <span class="label">FROM:</span>
+                    <span class="handwritten-name">Adipati Pamungkas</span>
+                </div>
+                <div class="meta-row">
+                    <span class="label">TO:</span>
+                    <span class="handwritten-name">Alexza Pandemos</span>
+                </div>
+            </div>
+
+            <div class="stamps-group">
+                <div class="mini-stamp">
+                    <span>❤️</span>
+                    <div class="stamp-text">LOVE</div>
+                </div>
+                <div class="mini-stamp">
+                    <span>🗝️</span>
+                    <div class="stamp-text">LOCK</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="letter-body">
+            <p>
+                Pada hari ini, tanggal <span class="highlight-date">18 Januari 2026</span>, 
+                sebuah perjanjian hati resmi dibuat. Tidak perlu menjadi sempurna, 
+                cukup hadir dan saling melengkapi sudah lebih dari cukup.
+            </p>
+            <br>
+            <p>
+                Kita berjanji untuk saling menjaga, menghargai setiap momen kecil, 
+                dan tetap bertahan bahkan di hari-hari yang sulit. 
+                Kamu sangat berharga, dan cerita ini baru saja dimulai.
+            </p>
+            <br>
+            <p style="text-align: center;">
+                <em>Let's do this together.</em>
+            </p>
+        </div>
+
+        <div class="signature-section">
+            <div class="sign-box">
+                <div class="sign-area">Adipati P.</div>
+                <div class="sign-label">Pihak Pertama</div>
+            </div>
+            
+            <div class="sign-box">
+                <div class="sign-area">Alexza P.</div>
+                <div class="sign-label">Pihak Kedua</div>
+            </div>
+        </div>
+
+        <div class="postmark">
+            <div class="postmark-inner">
+                OFFICIAL<br>
+                18/01/26<br>
+                LOVE AA
+            </div>
+            <div class="wavy-lines">~~~~</div>
+        </div>
+
+        <div style="position: absolute; bottom: 30px; left: 40px; font-family: 'Cedarville Cursive'; font-size: 1.5rem; color: #a83232;">
+            18/01
+        </div>
+
+    </div>
+
+</body>
+</html>
